@@ -7,6 +7,7 @@ set -u -e -o pipefail
 VER="$1"
 shift
 
+RUBY_SETUP_BIN="$(dirname "${BASH_SOURCE[0]}")"
 DEST=/progs/ruby/$VER
 
 
@@ -55,6 +56,6 @@ $DEST/bin/gem install gem-release --no-document --ri
 echo -e "\n==== Done: $DEST/bin/ruby \n"
 $DEST/bin/ruby -v
 
-/apps/boot_ups/bin/install/gemrc_config
+$RUBY_SETUP_BIN/install/gemrc_config
 
 
