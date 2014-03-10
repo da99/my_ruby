@@ -6,9 +6,9 @@ set -u -e -o pipefail
 
 DIR="$( basename "$(pwd)" )"
 
-if [[ !NOT_CLEAN_GIT ]]; then
-  git status
-  echo -e "\n=== GIT repo not clean enough." 1>&2
+if ! git_repo_is_clean
+then
+  echo -e "\n!!! GIT repo not clean enough.\n" 1>&2
   exit 1
 fi
 
@@ -25,8 +25,8 @@ git commit -m   "Bump: $VER"
 git tag         "v$VER"
 git push origin "v$VER"
 
-gem build "${DIR}.gem"
-echo "=== Done: bumping, commit, push"
-echo "Now: gem release ${DIR}-${VER}.gemspec"
+gem build ./*.gemspec
+echo "=== Done: bumping, commit, push. Done: building gem"
+echo "Now: gem push $(echo ./*.gem)"
 
 
