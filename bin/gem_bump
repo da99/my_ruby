@@ -4,13 +4,29 @@
 
 set -u -e -o pipefail
 
-ver=$(cat VERSION)
+DIR="$( basename "$(pwd)" )"
+
+if [[ !NOT_CLEAN_GIT ]]; then
+  git status
+  echo -e "\n=== GIT repo not clean enough." 1>&2
+  exit 1
+fi
 
 rm -f ./*.gem
-git add .
-git add -u
-git commit -m "Bump: $ver"
-git tag v$ver
-git push origin v$ver
+
+bump current
+echo -e "=== Bumping...\n"
+bump $1 --no-commit --no-bundle
+VER=$(cat VERSION)
+
+git add    .
+git add    -u
+git commit -m   "Bump: $VER"
+git tag         "v$VER"
+git push origin "v$VER"
+
+gem build "${DIR}.gem"
+echo "=== Done: bumping, commit, push"
+echo "Now: gem release ${DIR}-${VER}.gemspec"
 
 
