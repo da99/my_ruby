@@ -2,30 +2,31 @@
 # -*- bash -*-
 #
 #
-set -u -e -o pipefail
-
 VER="$1"
 shift
+set -u -e -o pipefail
 
-RUBY_SETUP_BIN="$(dirname "${BASH_SOURCE[0]}")"
-DEST=/progs/ruby/$VER
-
+RUBY_SETUP_BIN=="/apps/ruby_setup/bin"
 
 
 # === https://github.com/wayneeseguin/rvm/blob/master/scripts/functions/requirements/ubuntu 
-echo "=== Updating system using apt-get:"
-sudo apt-get update
-sudo apt-get install git      \
- curl gawk zlib1g-dev        \
- build-essential libssl-dev  \
- libreadline-dev libyaml-dev \
- libsqlite3-dev sqlite3      \
- libxml2-dev libxslt-dev     \
-bash curl patch bzip2 ca-certificates gawk \
-g++ gcc make libc6-dev patch openssl ca-certificates libreadline6 \
-libreadline6-dev curl zlib1g zlib1g-dev libssl-dev libyaml-dev \
-libsqlite3-dev sqlite3 autoconf \
-libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev
+if [[ -d /progs/ruby-build ]]
+then
+  sudo apt-get upgrade
+else
+  echo "=== Updating system using apt-get:"
+  sudo apt-get install git      \
+    curl gawk zlib1g-dev        \
+    build-essential libssl-dev  \
+    libreadline-dev libyaml-dev \
+    libsqlite3-dev sqlite3      \
+    libxml2-dev libxslt-dev     \
+    bash curl patch bzip2 ca-certificates gawk                        \
+    g++ gcc make libc6-dev patch openssl ca-certificates libreadline6 \
+    libreadline6-dev curl zlib1g zlib1g-dev libssl-dev libyaml-dev    \
+    libsqlite3-dev sqlite3 autoconf                                   \
+    libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev
+fi
 
 
 
@@ -40,6 +41,22 @@ else
   PREFIX=/progs ./install.sh
 fi
 # =====================================================
+
+# === Is version set? If not, find latest ruby version.
+if [[ -z "$VER" ]]
+then
+  VER="$(ruby-build --definitions | grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' | tail -n 1)"
+fi
+
+DEST=/progs/ruby/$VER
+
+# === Ensure dir does not already exist.
+if [[ -d $DEST ]]
+then
+  echo -e "\n=== Dir already exists: $DEST"
+  echo -e "  Remove it first, then come back."
+  exit 1
+fi
 
 # ================ The Main Show ======================
 CONFIGURE_OPTS="--enable-shared --disable-install-doc" bin/ruby-build -v $VER /progs/ruby/$VER "$@"
@@ -56,6 +73,11 @@ $DEST/bin/gem install gem-release --no-document --ri
 echo -e "\n==== Done: $DEST/bin/ruby \n"
 $DEST/bin/ruby -v
 
-$RUBY_SETUP_BIN/install/gemrc_config
+$RUBY_SETUP_BIN/gemrc_config
+
+if [[ ! -d /progs/ruby/current ]]
+then
+  $RUBY_SETUP_BIN/mk_ruby_current $VER
+fi
 
 

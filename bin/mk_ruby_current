@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# -*- bash -*-
+#
+#
+set -u -e -o pipefail
+
+VER="$1"
+DEST="/progs/ruby/$VER"
+curr="/progs/ruby/current"
+
+ln -si $DEST $curr
+echo -e "=== Linked: $DEST -> $curr"
+
+
