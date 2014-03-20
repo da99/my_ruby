@@ -15,7 +15,7 @@ DEST=/progs/ruby/$VER
 # === https://github.com/wayneeseguin/rvm/blob/master/scripts/functions/requirements/ubuntu 
 echo "=== Updating system using apt-get:"
 sudo apt-get update
-sudo apt-get install git-core \
+sudo apt-get install git      \
  curl gawk zlib1g-dev        \
  build-essential libssl-dev  \
  libreadline-dev libyaml-dev \
