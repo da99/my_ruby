@@ -67,6 +67,7 @@ $DEST/bin/gem update --no-document
 $DEST/bin/gem update --system
 $DEST/bin/gem install bundler     --no-document
 $DEST/bin/gem install bump        --no-document --ri
+$DEST/bin/gem install pry         --no-document --ri
 $DEST/bin/gem install gem-release --no-document --ri
 # =====================================================
 
