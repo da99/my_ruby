@@ -4,6 +4,7 @@
 
 set -u -e -o pipefail
 
+ME="gemify"
 DIR="$( basename "$(pwd)" )"
 
 # === COMMAND: init
@@ -12,16 +13,20 @@ if [[ "$@" == "init" ]]; then
   exit 0
 fi
 
-rm -f ./*.gem
-
-case "$@" in
-
-  "bump") # === COMMAND: bump
+function git_is_clean {
     if ! git_repo_is_clean
     then
       echo -e "\n!!! GIT repo not clean enough.\n" 1>&2
       exit 1
     fi
+}
+
+rm -f ./*.gem
+
+case "$@" in
+
+  "bump") # === COMMAND: bump
+    git_is_clean
 
     bump current
     echo -e "=== Bumping...\n"
@@ -35,13 +40,15 @@ case "$@" in
     ;;
 
   "push") # === COMMAND: push
+    git_is_clean
+    VER=$(cat VERSION)
     git push origin "v$VER"
     ;;
 
   "release") # === COMMAND: release
-    $BASH_SOURCE push
+    git_is_clean
+    $ME push
     gem build ./*.gemspec
-    echo "=== Done: bumping, commit, push. Done: building gem"
     gem push "$(echo ./*.gem)"
     ;;
 
