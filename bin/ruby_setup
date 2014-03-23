@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# -*- bash -*-
+#
+#
+action="$1"
+shift
+
+set -u -e -o pipefail
+
+
+case "$action" in
+  "class_name")
+    ruby -e "puts ARGV[0].downcase.split('_').map(&:capitalize).join('_')" "$@"
+    ;;
+  *)
+    echo "Unknown action: $action" 1>&2
+    exit 1
+    ;;
+esac
+
+
