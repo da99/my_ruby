@@ -6,12 +6,96 @@ action="$1"
 shift
 
 set -u -e -o pipefail
+DIR="$( basename "$(pwd)" )"
+TEMPLATES="/apps/ruby_setup/templates/gem"
+
+function git_is_clean {
+    if ! git_repo_is_clean
+    then
+      echo -e "\n!!! GIT repo not clean enough.\n" 1>&2
+      exit 1
+    fi
+}
 
 
 case "$action" in
+  "")
+    git status
+    exit 0
+    ;;
+
   "class_name")
     ruby -e "puts ARGV[0].downcase.split('_').map(&:capitalize).join('_')" "$@"
     ;;
+
+  "gem_push")
+    git_is_clean
+    VER=$(cat VERSION)
+    git push origin "v$VER"
+    ;;
+
+  "gem_release")
+    rm -f ./*.gem
+    git_is_clean
+    $ME push
+    gem build ./*.gemspec
+    gem push "$(echo ./*.gem)"
+    ;;
+
+  "gem_init")
+    if [[ "$@" == "ex" ]]; then
+      echo "  $ gemify init"
+      echo "  $ gemify init bitbucket"
+      exit 0
+    fi
+
+    echo ""
+    export name="$(basename $(pwd))"
+    export NAME="$(ruby_setup class_name $name)"
+    export today="$(date +"%Y-%m-%d")"
+    export year="$(date +"%Y")"
+    export user="$(git config --global user.name)"
+    export email="$(git config --global user.email)"
+    gemspec="${name}.gemspec"
+
+    if [[ -z "$@" ]]; then
+      export repo="github"
+      export homepage="https://github.com/${user}/${name}"
+      export repo_git="git@github.com:${user}/${name}.git"
+    else
+      export repo="bitbucket"
+      export homepage="https://bitbucket.org/da99/${name}"
+      export repo_git="git@bitbucket.org:${user}/${name}.git"
+    fi
+
+    if [[ ! -d .git ]]; then
+      git init
+    fi
+
+
+    mkdir -p specs
+    mkdir -p lib
+    bash_setup template $TEMPLATES/Gemfile     Gemfile
+    bash_setup template $TEMPLATES/LICENSE.txt LICENSE.txt
+    bash_setup template $TEMPLATES/README.md   README.md
+    bash_setup template $TEMPLATES/the.gemspec ${name}.gemspec
+    bash_setup template $TEMPLATES/VERSION     VERSION
+    bash_setup template $TEMPLATES/.gitignore  .gitignore
+    bash_setup template $TEMPLATES/lib.rb      lib/${name}.rb
+
+    if [[ -z "$(git remote -v)" ]]; then
+      git_update
+      git commit -m "Init."
+      git remote add origin $repo_git
+      colorize yellow "=== Added: git origin: $repo_git"
+      colorize yellow "=== Set git upstream:\n    git push --set-upstream origin master"
+    fi
+
+
+    colorize green "=== Done gem init: $name"
+    ;;
+
+
   *)
     echo "Unknown action: $action" 1>&2
     exit 1
