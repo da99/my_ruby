@@ -1,5 +1,5 @@
 
-class ${NAME}
+class {{NAME}}
 
   class << self
   end # === class self ===
@@ -7,4 +7,4 @@ class ${NAME}
   def initialize
   end
 
-end # === class ${NAME} ===
+end # === class {{NAME}} ===

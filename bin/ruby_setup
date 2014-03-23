@@ -75,13 +75,13 @@ case "$action" in
 
     mkdir -p specs
     mkdir -p lib
-    bash_setup template $TEMPLATES/Gemfile     Gemfile
-    bash_setup template $TEMPLATES/LICENSE.txt LICENSE.txt
-    bash_setup template $TEMPLATES/README.md   README.md
-    bash_setup template $TEMPLATES/the.gemspec ${name}.gemspec
-    bash_setup template $TEMPLATES/VERSION     VERSION
-    bash_setup template $TEMPLATES/.gitignore  .gitignore
-    bash_setup template $TEMPLATES/lib.rb      lib/${name}.rb
+    ruby_setup template $TEMPLATES/Gemfile     Gemfile
+    ruby_setup template $TEMPLATES/LICENSE.txt LICENSE.txt
+    ruby_setup template $TEMPLATES/README.md   README.md
+    ruby_setup template $TEMPLATES/the.gemspec ${name}.gemspec
+    ruby_setup template $TEMPLATES/VERSION     VERSION
+    ruby_setup template $TEMPLATES/.gitignore  .gitignore
+    ruby_setup template $TEMPLATES/lib.rb      lib/${name}.rb
 
     if [[ -z "$(git remote -v)" ]]; then
       git_update
@@ -91,10 +91,34 @@ case "$action" in
       colorize yellow "=== Set git upstream:\n    git push --set-upstream origin master"
     fi
 
-
     colorize green "=== Done gem init: $name"
     ;;
 
+  "template")
+    file="$1"
+    output="$2"
+    ruby_template='
+      file  = ARGV[0]
+      tmpl  = File.read(file)
+      puts(tmpl.gsub(/{{([^}]+)}}/) do |match|
+        raise "Var not found: #{$1}" unless ENV[$1]
+        ENV[$1]
+      end)
+    '
+
+    if [[ -f $output ]]; then
+      colorize yellow "=== Skipping existing file: $output"
+      exit 0
+    fi
+
+    # Note: eval and write the content separately.
+    # If you combine those two steps, and an error
+    # occurs during eval, an empty file will be created:
+    #   ruby "error" >> $output
+    content="$(ruby -e "$ruby_template" "$file")"
+    echo "$content" >> "$output"
+    colorize green "=== Wrote: $output"
+    ;;
 
   *)
     echo "Unknown action: $action" 1>&2

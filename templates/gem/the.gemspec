@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
-\$LOAD_PATH.unshift(lib) unless \$LOAD_PATH.include?(lib)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
-  spec.name          = "${name}"
+  spec.name          = "{{name}}"
   spec.version       = `cat VERSION`
-  spec.authors       = ["${user}"]
-  spec.email         = ["${email}"]
+  spec.authors       = ["{{user}}"]
+  spec.email         = ["{{email}}"]
   spec.summary       = %q{TODO: Write a short summary. Required.}
   spec.description   = %q{
     TODO: Write a longer description. Optional.
   }
-  spec.homepage      = "${homepage}"
+  spec.homepage      = "{{homepage}}"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")

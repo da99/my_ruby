@@ -1,5 +1,5 @@
 
-Copyright (c) ${year} ${user}
+Copyright (c) {{year}} {{user}}
 
 MIT License
 

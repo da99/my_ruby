@@ -1,11 +1,11 @@
 
-# ${NAME}
+# {{NAME}}
 
 I have no idea.
 
 ## Installation
 
-    gem '${name}'
+    gem '{{name}}'
 
 ## Usage
 
