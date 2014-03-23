@@ -70,11 +70,11 @@ case "$@" in
 
     if [[ -z "$@" ]]; then
       repo="github"
-      repo_url="https://github.com/${user}/${name}"
+      homepage="https://github.com/${user}/${name}"
       repo_git="git@github.com:${user}/${name}.git"
     else
       repo="bitbucket"
-      repo_url="http://${repo}"
+      homepage="https://bitbucket.org/da99/${name}"
       repo_git="git@bitbucket.org:${user}/${name}.git"
     fi
 
