@@ -19,10 +19,6 @@ function git_is_clean {
 
 
 case "$action" in
-  "")
-    git status
-    exit 0
-    ;;
 
   "class_name")
     ruby -e "puts ARGV[0].downcase.split('_').map(&:capitalize).join('_')" "$@"
@@ -68,13 +64,10 @@ case "$action" in
       export repo_git="git@bitbucket.org:${user}/${name}.git"
     fi
 
-    if [[ ! -d .git ]]; then
-      git init
-    fi
-
-
     mkdir -p specs
     mkdir -p lib
+    mkdir -p bin
+
     ruby_setup template $TEMPLATES/Gemfile     Gemfile
     ruby_setup template $TEMPLATES/LICENSE.txt LICENSE.txt
     ruby_setup template $TEMPLATES/README.md   README.md
@@ -82,6 +75,18 @@ case "$action" in
     ruby_setup template $TEMPLATES/VERSION     VERSION
     ruby_setup template $TEMPLATES/.gitignore  .gitignore
     ruby_setup template $TEMPLATES/lib.rb      lib/${name}.rb
+    ruby_setup template $TEMPLATES/helpers.rb  specs/helpers.rb
+    ruby_setup template $TEMPLATES/test        bin/test
+
+    if [[ "$(echo -n specs/*)" == "specs/helpers.rb" ]]; then
+      ruby_setup template $TEMPLATES/first_test.rb specs/${name}.rb
+    fi
+
+    chmod +x bin/test
+
+    if [[ ! -d .git ]]; then
+      git init
+    fi
 
     if [[ -z "$(git remote -v)" ]]; then
       git_update
