@@ -24,16 +24,9 @@ case "$action" in
     ruby -e "puts ARGV[0].downcase.split('_').map(&:capitalize).join('_')" "$@"
     ;;
 
-  "gem_push")
-    git_is_clean
-    VER=$(cat VERSION)
-    git push origin "v$VER"
-    ;;
-
   "gem_release")
     rm -f ./*.gem
     git_is_clean
-    $ME push
     gem build ./*.gemspec
     gem push "$(echo ./*.gem)"
     ;;
