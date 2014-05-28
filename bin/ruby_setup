@@ -74,13 +74,17 @@ case "$action" in
     ruby_setup template $TEMPLATES/.gitignore  .gitignore
     ruby_setup template $TEMPLATES/lib.rb      lib/${name}.rb
     ruby_setup template $TEMPLATES/helpers.rb  specs/helpers.rb
+
     ruby_setup template $TEMPLATES/test        bin/test
+    chmod +x bin/test
+
+    ruby_setup template $TEMPLATES/bundle      bin/bundle
+    chmod +x bin/bundle
 
     if [[ "$(echo -n specs/*)" == "specs/helpers.rb" ]]; then
       ruby_setup template $TEMPLATES/first_test.rb specs/${name}.rb
     fi
 
-    chmod +x bin/test
 
     if [[ ! -d .git ]]; then
       git init
