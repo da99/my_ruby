@@ -19,6 +19,16 @@ function git_is_clean {
 
 
 case "$action" in
+  "help")
+    echo ""
+    echo "  === gem_init ==="
+    echo "  $ mkdir  my_new_gem"
+    echo "  $ cd     my_new_gem"
+    echo "  $ gemify init"
+    echo "  $ gemify init bitbucket"
+    echo ""
+    exit 0
+    ;;
 
   "class_name")
     ruby -e "puts ARGV[0].downcase.split('_').map(&:capitalize).join('_')" "$@"
@@ -32,11 +42,6 @@ case "$action" in
     ;;
 
   "gem_init")
-    if [[ "$@" == "ex" ]]; then
-      echo "  $ gemify init"
-      echo "  $ gemify init bitbucket"
-      exit 0
-    fi
 
     echo ""
     export name="$(basename $(pwd))"
