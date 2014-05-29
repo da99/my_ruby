@@ -21,11 +21,13 @@ function git_is_clean {
 case "$action" in
   "help")
     echo ""
-    echo "  === gem_init ==="
+    echo "  $ ruby_setup   class_name  My_Class"
+    echo ""
     echo "  $ mkdir  my_new_gem"
     echo "  $ cd     my_new_gem"
-    echo "  $ gemify init"
-    echo "  $ gemify init bitbucket"
+    echo "  $ ruby_setup   gem_init"
+    echo "  $ ruby_setup   gem_init   bitbucket"
+    echo "  $ ruby_setup   gem_release"
     echo ""
     exit 0
     ;;
