@@ -21,9 +21,13 @@ function git_is_clean {
 
 
 case "$action" in
+
   "help")
     echo ""
     echo "  $ ruby_setup   class_name  My_Class"
+    echo ""
+    echo "  $ ruby_setup   install x.x.x"
+    echo "  $ ruby_setup   install"
     echo ""
     echo "  $ mkdir  my_new_gem"
     echo "  $ cd     my_new_gem"
@@ -32,6 +36,41 @@ case "$action" in
     echo "  $ ruby_setup   gem_release"
     echo ""
     exit 0
+    ;;
+
+  "install")
+    cd /progs
+    if [[ ! -d /progs/ruby-build ]]; then
+      git clone https://github.com/sstephenson/ruby-build.git
+    fi
+    cd ruby-build
+    git pull
+
+    if [[ -z "$@" ]]; then
+      bin/ruby-build --definitions
+      echo "=== Choose one from the top."
+      exit 0
+    fi
+
+    ver="$1"
+    if [[ -d /progs/ruby/$ver ]]; then
+      echo "=== Aborting: Already exists: /progs/ruby/$ver"
+      exit 0
+    fi
+
+    echo "=== Linking $ver as current ruby:"
+    bin/ruby-build install $ver /progs/ruby/$ver
+    rm -f /progs/ruby/current
+    ln -s /progs/ruby/$ver  /progs/ruby/current
+
+    echo "=== Updating gems:"
+    gem update
+    gem update --system
+    gem install bundler
+
+    echo "=== Done installing."
+    ruby -v
+
     ;;
 
   "class_name")
