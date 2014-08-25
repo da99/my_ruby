@@ -31,9 +31,11 @@ case "$action" in
     echo ""
     echo "  $ mkdir  my_new_gem"
     echo "  $ cd     my_new_gem"
+    echo ""
     echo "  $ ruby_setup   gem_init"
-    echo "  $ ruby_setup   gem_init   bitbucket"
+    echo "  $ ruby_setup   gem_init            bitbucket"
     echo "  $ ruby_setup   gem_release"
+    echo "  $ ruby_setup   gem_bump_and_commit major|minor|patch"
     echo ""
     exit 0
     ;;
