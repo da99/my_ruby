@@ -84,6 +84,10 @@ case "$action" in
     gem push "$(echo ./*.gem)"
     ;;
 
+  "gem_bump_and_commit")
+    bash_setup bump_and_commit "$@"
+    ;;
+
   "gem_init")
 
     echo ""
