@@ -116,7 +116,7 @@ case "$action" in
     mkdir -p bin
 
     ruby_setup template $TEMPLATES/Gemfile     Gemfile
-    ruby_setup template $TEMPLATES/LICENSE.txt LICENSE.txt
+    ruby_setup template $TEMPLATES/LICENSE     LICENSE
     ruby_setup template $TEMPLATES/README.md   README.md
     ruby_setup template $TEMPLATES/the.gemspec ${name}.gemspec
     ruby_setup template $TEMPLATES/VERSION     VERSION
