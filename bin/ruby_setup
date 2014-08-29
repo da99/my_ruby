@@ -37,10 +37,33 @@ case "$action" in
     echo "  $ ruby_setup   gem_release"
     echo "  $ ruby_setup   gem_bump_and_commit major|minor|patch"
     echo ""
+    echo "  $ ruby_setup   gemrc_config"
+    echo ""
     exit 0
     ;;
 
   "install")
+
+    # === https://github.com/wayneeseguin/rvm/blob/master/scripts/functions/requirements/ubuntu 
+    if [[ -d /progs/ruby-build ]]
+    then
+      sudo apt-get upgrade
+    else
+      echo "=== Updating system using apt-get:"
+      sudo apt-get install git      \
+        curl gawk zlib1g-dev        \
+        build-essential libssl-dev  \
+        libreadline-dev libyaml-dev \
+        libsqlite3-dev sqlite3      \
+        libxml2-dev libxslt-dev     \
+        bash curl patch bzip2 ca-certificates gawk                        \
+        g++ gcc make libc6-dev patch openssl ca-certificates libreadline6 \
+        libreadline6-dev curl zlib1g zlib1g-dev libssl-dev libyaml-dev    \
+        libsqlite3-dev sqlite3 autoconf                                   \
+        libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev
+    fi
+
+
     cd /progs
     if [[ ! -d /progs/ruby-build ]]; then
       git clone https://github.com/sstephenson/ruby-build.git
@@ -54,21 +77,35 @@ case "$action" in
       exit 0
     fi
 
-    ver="$1"
+    if [[ -z "$@" ]]
+    then
+      ver="$(bin/ruby-build --definitions | grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' | tail -n 1)"
+    else
+      ver="$1"
+    fi
+
     if [[ -d /progs/ruby/$ver ]]; then
       echo "=== Aborting: Already exists: /progs/ruby/$ver"
       exit 0
     fi
 
     echo "=== Linking $ver as current ruby:"
-    bin/ruby-build install $ver /progs/ruby/$ver
+
+    # ================ The Main Show ======================
+    CONFIGURE_OPTS="--enable-shared --disable-install-doc" \
+      bin/ruby-build install $ver /progs/ruby/$ver
+    # =====================================================
+
     rm -f /progs/ruby/current
     ln -s /progs/ruby/$ver  /progs/ruby/current
 
     echo "=== Updating gems:"
-    gem update
+    gem update --no-document
     gem update --system
-    gem install bundler
+    gem install bundler --no-document
+    gem install bump    --no-document
+    gem install pry     --no-document
+    ruby_setup gemrc_config
 
     echo "=== Done installing."
     ruby -v
@@ -173,6 +210,24 @@ case "$action" in
     content="$(ruby -e "$ruby_template" "$file")"
     echo "$content" >> "$output"
     colorize green "=== Wrote: $output"
+    ;;
+
+  "gemrc_config")
+      if [[ ! -f /etc/gemrc ]]
+      then
+        echo "---" > /tmp/gemrc_temp
+        echo ":verbose: true" > /tmp/gemrc_temp
+        echo ":sources:" > /tmp/gemrc_temp
+        echo "- https://rubygems.org" > /tmp/gemrc_temp
+        echo "gem: --no-ri --no-rdoc" > /tmp/gemrc_temp
+        echo ":update_sources: true"  > /tmp/gemrc_temp
+        sudo mv /tmp/gemrc_temp /etc/gemrc
+        echo "Wrote to /etc/gemrc:"
+      else
+        echo "File already exists: /etc/gemrc"
+      fi
+
+      cat /etc/gemrc
     ;;
 
   *)
