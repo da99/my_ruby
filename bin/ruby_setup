@@ -148,7 +148,7 @@ case "$action" in
       export repo_git="git@bitbucket.org:${user}/${name}.git"
     fi
 
-    mkdir -p specs
+    mkdir -p specs/lib
     mkdir -p lib
     mkdir -p bin
 
@@ -159,7 +159,7 @@ case "$action" in
     ruby_setup template $TEMPLATES/VERSION     VERSION
     ruby_setup template $TEMPLATES/.gitignore  .gitignore
     ruby_setup template $TEMPLATES/lib.rb      lib/${name}.rb
-    ruby_setup template $TEMPLATES/helpers.rb  specs/helpers.rb
+    ruby_setup template $TEMPLATES/helpers.rb  specs/lib/helpers.rb
 
     ruby_setup template $TEMPLATES/test        bin/test
     chmod +x bin/test
@@ -167,10 +167,10 @@ case "$action" in
     ruby_setup template $TEMPLATES/bundle      bin/bundle
     chmod +x bin/bundle
 
-    if [[ "$(echo -n specs/*)" == "specs/helpers.rb" ]]; then
+    # === Create a default test file if no other test files exist.
+    if [[ "$(echo -n specs/*.rb)" == "" ]]; then
       ruby_setup template $TEMPLATES/first_test.rb specs/${name}.rb
     fi
-
 
     if [[ ! -d .git ]]; then
       git init
