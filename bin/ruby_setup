@@ -134,6 +134,7 @@ case "$action" in
     ;;
 
   "gem_bump_and_commit")
+    git_is_clean
     bin/test
     bash_setup bump_and_commit "$@"
     ;;
