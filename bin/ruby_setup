@@ -128,6 +128,7 @@ case "$action" in
 
   "gem_release")
     rm -f ./*.gem
+    git push origin "v$(cat VERSION)"
     git_is_clean
     gem build ./*.gemspec
     gem push "$(echo ./*.gem)"
