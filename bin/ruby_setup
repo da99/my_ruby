@@ -95,7 +95,7 @@ case "$action" in
 
     # ================ The Main Show ======================
     CONFIGURE_OPTS="--enable-shared --disable-install-doc" \
-      bin/ruby-build install $ver /progs/ruby/$ver
+      bin/ruby-build $ver /progs/ruby/$ver
     # =====================================================
 
     rm -f /progs/ruby/current
