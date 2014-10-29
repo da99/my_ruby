@@ -91,13 +91,13 @@ case "$action" in
       exit 0
     fi
 
-    echo "=== Linking $ver as current ruby:"
-
     # ================ The Main Show ======================
     CONFIGURE_OPTS="--enable-shared --disable-install-doc" \
       bin/ruby-build $ver /progs/ruby/$ver
     # =====================================================
 
+
+    echo "=== Linking $ver as current ruby:"
     rm -f /progs/ruby/current
     ln -s /progs/ruby/$ver  /progs/ruby/current
 
