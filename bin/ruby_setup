@@ -26,6 +26,8 @@ case "$action" in
     echo ""
     echo "  $ ruby_setup   class_name  My_Class"
     echo ""
+    echo "  $ ruby_setup   list"
+    echo "  $ ruby_setup   update-defs"
     echo "  $ ruby_setup   install x.x.x"
     echo "  $ ruby_setup   install"
     echo ""
@@ -45,6 +47,20 @@ case "$action" in
     echo "  $ ruby_setup   gemrc_config"
     echo ""
     exit 0
+    ;;
+
+  "update-defs")
+    cd /progs
+    if [[ ! -d /progs/ruby-build ]]; then
+      git clone https://github.com/sstephenson/ruby-build.git
+    fi
+    cd ruby-build
+    git pull
+    ;;
+
+  "list")
+    ruby_setup update-defs
+    /progs/ruby-build/bin/ruby-build --definitions | grep "^[2-9]"
     ;;
 
   "install")
@@ -72,15 +88,8 @@ case "$action" in
       autoconf bison build-essential                                    \
       libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev
 
-    cd /progs
-    if [[ ! -d /progs/ruby-build ]]; then
-      git clone https://github.com/sstephenson/ruby-build.git
-    fi
-    cd ruby-build
-    git pull
-
     if [[ -z "$@" ]]; then
-      bin/ruby-build --definitions
+      ruby_setup list
       echo "=== Choose one from the top."
       exit 0
     fi
