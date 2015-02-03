@@ -207,7 +207,6 @@ case "$action" in
       git_update
       git commit -m "Init."
       git remote add origin $repo_git
-      git branch --set-upstream-to=origin/master master
     fi
 
     colorize green "=== Done gem init: $name"
