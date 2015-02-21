@@ -42,6 +42,7 @@ case "$action" in
     echo "  $ ruby_setup   gem_bump_and_commit   major|minor|patch"
     echo "  $ ruby_setup   gem_release"
     echo "  $ ruby_setup   gem_install"
+    echo "  $ ruby_setup   gem_name     old   new"
     echo ""
     echo "  $ ruby_setup   gemrc_config"
     echo ""
@@ -254,6 +255,32 @@ case "$action" in
       fi
 
       cat /etc/gemrc
+    ;;
+
+  "gem_rename")
+    old=$1
+    new=$2
+    if [[ -d "/apps/$old" ]]
+    then
+      cd /apps
+      mv "$old" "$new"
+    fi
+
+    cd "/apps/$new"
+    echo "... in /apps/$new"
+
+    for i in $(find . -name "*$1*" -print)
+    do
+      set -x
+      echo mv -i $i ${i/$old/$new}
+      set +x
+    done
+
+    set -x
+    find ./ -type f -not -path "*/.git/*" -exec sed -i 's|'$old'|'$new'|g' {} \;
+
+    sed -i 's|'$old'|'$new'|g' .git/config
+    set +x
     ;;
 
   *)
