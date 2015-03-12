@@ -86,7 +86,8 @@ case "$action" in
       libsqlite3-dev sqlite3 autoconf                                   \
       libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev \
       autoconf bison build-essential                                    \
-      libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev
+      libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev           \
+      libedit-dev
 
     if [[ -z "$@" ]]; then
       ruby_setup list
@@ -96,7 +97,7 @@ case "$action" in
 
     if [[ -z "$@" ]]
     then
-      ver="$(bin/ruby-build --definitions | grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' | tail -n 1)"
+      ver="$(/progs/ruby-build/bin/ruby-build --definitions | grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' | tail -n 1)"
     else
       ver="$1"
     fi
@@ -108,7 +109,7 @@ case "$action" in
 
     # ================ The Main Show ======================
     CONFIGURE_OPTS="--enable-shared --disable-install-doc" \
-      bin/ruby-build $ver /progs/ruby/$ver
+      /progs/ruby-build/bin/ruby-build $ver /progs/ruby/$ver
     # =====================================================
 
 
@@ -122,7 +123,7 @@ case "$action" in
     gem install bundler --no-document
     gem install bump    --no-document
     gem install pry     --no-document
-    ruby_setup gemrc_config
+    ruby_setup  gemrc_config
 
     echo "=== Done installing."
     ruby -v
