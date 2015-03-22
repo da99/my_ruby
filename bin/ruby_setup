@@ -87,7 +87,8 @@ case "$action" in
       libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev \
       autoconf bison build-essential                                    \
       libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev           \
-      libedit-dev
+      libedit-dev                                                       \
+      libcurl4-openssl-dev
 
     if [[ -z "$@" ]]; then
       ruby_setup list
