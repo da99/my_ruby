@@ -43,6 +43,7 @@ case "$action" in
     echo "  $ ruby_setup   gem_release"
     echo "  $ ruby_setup   gem_install"
     echo "  $ ruby_setup   gem_rename            old   new"
+    echo "  $ ruby_setup   gem_install"
     echo ""
     echo "  $ ruby_setup   gemrc_config"
     echo ""
@@ -143,8 +144,9 @@ case "$action" in
     set -x
     trash-put *.gem
     name="$(basename $(pwd))"
-    gem build $name.gemspec
-    gem install "$name-$(cat VERSION).gem"
+    name="$(basename $(pwd))"
+    gem build "${name}.gemspec"
+    gem install "${name}-$(cat VERSION).gem"
     ;;
 
   "gem_release")
@@ -292,6 +294,7 @@ case "$action" in
       git status
     fi
     ;;
+
 
   *)
     echo "Unknown action: $action" 1>&2
