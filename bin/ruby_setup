@@ -40,9 +40,11 @@ case "$action" in
     echo "  $ ruby_setup   gem_init"
     echo "  $ ruby_setup   gem_init              bitbucket"
     echo "  $ ruby_setup   gem_bump_commit_push  major|minor|patch"
+    echo ""
     echo "  $ ruby_setup   gem_release"
-    echo "  $ ruby_setup   gem_install"
+    echo ""
     echo "  $ ruby_setup   gem_rename            old   new"
+    echo ""
     echo "  $ ruby_setup   gem_install"
     echo ""
     echo "  $ ruby_setup   gemrc_config"
@@ -159,6 +161,7 @@ case "$action" in
 
   "gem_bump_commit_push")
     git_is_clean
+    bundle update
     bin/test
     bash_setup bump_commit_push "$@"
     ;;
