@@ -197,11 +197,8 @@ case "$action" in
     ruby_setup template $TEMPLATES/lib.rb      lib/${name}.rb
     ruby_setup template $TEMPLATES/helpers.rb  specs/lib/helpers.rb
 
-    ruby_setup template $TEMPLATES/test        bin/test
-    chmod +x bin/test
-
-    ruby_setup template $TEMPLATES/bundle      bin/bundle
-    chmod +x bin/bundle
+    ruby_setup template $TEMPLATES/name        bin/${name}
+    chmod +x bin/${name}
 
     # === Create a default test file if no other test files exist.
     if [[ "$(echo -n specs/*.rb)" == "" ]]; then
