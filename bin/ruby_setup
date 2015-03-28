@@ -162,7 +162,13 @@ case "$action" in
   "gem_bump_commit_push")
     git_is_clean
     bundle update
-    bin/test
+    if [[ -f bin/test ]]
+    then
+      bin/test
+    else
+      "bin/$(basename "$(pwd)")" test
+    fi
+
     bash_setup bump_commit_push "$@"
     ;;
 
