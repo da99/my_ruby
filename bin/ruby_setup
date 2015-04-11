@@ -37,6 +37,8 @@ case "$action" in
     echo "  $ cd     my_new_gem"
     echo "  ====================="
     echo ""
+    echo "  $ ruby_setup   ruby_clean"
+    echo ""
     echo "  $ ruby_setup   gem_init"
     echo "  $ ruby_setup   gem_init              bitbucket"
     echo "  $ ruby_setup   gem_bump_commit_push  major|minor|patch"
@@ -142,6 +144,13 @@ case "$action" in
     ruby -e "puts ARGV[0].downcase" "$@"
     ;;
 
+  "ruby_clean")
+    bash_setup files_zero aputs '*.rb'
+    bash_setup files_zero puts  '*.rb'
+    bash_setup files_zero binding.pry  '*.rb'
+    ;;
+
+
   "gem_install")
     set -x
     trash-put *.gem
@@ -160,6 +169,7 @@ case "$action" in
     ;;
 
   "gem_bump_commit_push")
+    ruby_setup ruby_clean
     git_is_clean
     bundle update
     if [[ -f bin/test ]]
