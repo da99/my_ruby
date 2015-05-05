@@ -69,6 +69,8 @@ case "$action" in
     ;;
 
   "install")
+    cd /progs/ruby-build
+    git pull
 
     # === https://github.com/wayneeseguin/rvm/blob/master/scripts/functions/requirements/ubuntu
     # === https://github.com/sstephenson/ruby-build/wiki
