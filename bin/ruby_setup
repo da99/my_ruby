@@ -174,8 +174,7 @@ case "$action" in
     ruby_setup ruby_clean
     git_is_clean
     bundle update
-    if [[ -f bin/test ]]
-    then
+    if [[ -f "bin/test" ]]; then
       bin/test
     else
       "bin/$(basename "$(pwd)")" test
