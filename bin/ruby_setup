@@ -164,10 +164,13 @@ case "$action" in
 
   "gem_release")
     rm -f ./*.gem
-    bash_setup release
     git_is_clean
     gem build ./*.gemspec
     gem push "$(echo ./*.gem)"
+
+    # This is done last in case the gem has errors,
+    #  like "FIXME" or "TODO" in the gemspec.
+    bash_setup release
     ;;
 
   "gem_bump_commit_push")
