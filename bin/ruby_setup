@@ -51,6 +51,8 @@ case "$action" in
     echo ""
     echo "  $ ruby_setup   gemrc_config"
     echo ""
+    echo "  $ ruby_setup   bundle"
+    echo ""
     exit 0
     ;;
 
@@ -315,6 +317,12 @@ case "$action" in
     fi
     ;;
 
+  "bundle")
+    # This is needed because `bundle update`
+    # ignores Gemfile.lock, unlike `bundle install`.
+    bundle install
+    bundle update
+    ;;
 
   *)
     echo "Unknown action: $action" 1>&2
