@@ -56,6 +56,19 @@ case "$action" in
     exit 0
     ;;
 
+  "version")
+    if [[ -z "$(which bump)" ]]; then
+      echo "!!! install rubygem: gem install bump"
+      exit 1
+    fi
+    if [[ "$1" != "current" ]]; then
+      git_is_clean
+      echo -e "=== Bumping from: $(bump current)\n"
+    fi
+    js_setup js_clean
+    bump $1 --no-commit --no-bundle
+    ;;
+
   "update-defs")
     cd /progs
     if [[ ! -d /progs/ruby-build ]]; then
@@ -185,7 +198,7 @@ case "$action" in
       "bin/$(basename "$(pwd)")" test
     fi
 
-    bash_setup bump_commit_push "$@"
+    bash_setup version_commit_push "$@"
     ;;
 
   "gem_init")
