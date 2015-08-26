@@ -41,9 +41,9 @@ case "$action" in
     echo ""
     echo "  $ ruby_setup   gem_init"
     echo "  $ ruby_setup   gem_init              bitbucket"
-    echo "  $ ruby_setup   gem_bump_commit_push  major|minor|patch"
+    echo "  $ ruby_setup   bump_commit_push  major|minor|patch"
     echo ""
-    echo "  $ ruby_setup   gem_release"
+    echo "  $ ruby_setup   release"
     echo ""
     echo "  $ ruby_setup   gem_rename            old   new"
     echo ""
@@ -56,18 +56,6 @@ case "$action" in
     exit 0
     ;;
 
-  "version")
-    if [[ -z "$(which bump)" ]]; then
-      echo "!!! install rubygem: gem install bump"
-      exit 1
-    fi
-    if [[ "$1" != "current" ]]; then
-      git_is_clean
-      echo -e "=== Bumping from: $(bump current)\n"
-    fi
-    js_setup js_clean
-    bump $1 --no-commit --no-bundle
-    ;;
 
   "update-defs")
     cd /progs
@@ -177,7 +165,7 @@ case "$action" in
     gem install "${name}-$(cat VERSION).gem"
     ;;
 
-  "gem_release")
+  "release")
     rm -f ./*.gem
     git_is_clean
     gem build ./*.gemspec
@@ -185,10 +173,23 @@ case "$action" in
 
     # This is done last in case the gem has errors,
     #  like "FIXME" or "TODO" in the gemspec.
-    bash_setup release
+    git push origin "v$(cat VERSION)"
+    git push
     ;;
 
-  "gem_bump_commit_push")
+  "bump")
+    if [[ -z "$(which bump)" ]]; then
+      echo "!!! install rubygem: gem install bump"
+      exit 1
+    fi
+    if [[ "$1" != "current" ]]; then
+      git_is_clean
+      echo -e "=== Bumping from: $(bump current)\n"
+    fi
+    bump $1 --no-commit --no-bundle
+    ;;
+
+  "bump_commit_push")
     ruby_setup ruby_clean
     git_is_clean
     bundle update
@@ -198,7 +199,13 @@ case "$action" in
       "bin/$(basename "$(pwd)")" test
     fi
 
-    bash_setup version_commit_push "$@"
+    $0 bump $@
+
+    VER=$(cat VERSION)
+    git_update
+    git commit -m   "Bump: $VER"
+    git tag         "v$VER"
+    git push
     ;;
 
   "gem_init")
