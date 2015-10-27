@@ -208,6 +208,7 @@ case "$action" in
     git commit -m   "Bump: $VER"
     git tag         "v$VER"
     git push
+    git push origin "v$VER"
     ;;
 
   "gem_init")
