@@ -83,7 +83,7 @@ case "$action" in
       mkdir -p "$my_gems"
       bash_setup make_link "$my_gems" $HOME/.gem
       if ! gem list -i curses; then
-        gem install --user-install curses
+        gem install --user-install curses # Needed for fzf
       fi
 
       exit 0
