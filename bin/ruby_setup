@@ -12,7 +12,7 @@ TEMPLATES="/apps/ruby_setup/templates/gem"
 # PATH="/progs/ruby/current/bin:$PATH"
 
 function git_is_clean {
-    if ! git_repo_is_clean
+    if ! git_setup is-clean
     then
       echo -e "\n!!! GIT repo not clean enough.\n" 1>&2
       exit 1
