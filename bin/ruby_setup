@@ -220,7 +220,7 @@ case "$action" in
     $0 bump $@
 
     VER=$(cat VERSION)
-    git_update
+    git_setup update
     git commit -m   "Bump: $VER"
     git tag         "v$VER"
     git push
@@ -274,7 +274,7 @@ case "$action" in
     fi
 
     if [[ -z "$(git remote -v)" ]]; then
-      git_update
+      git_setup update
       git commit -m "Init."
       git remote add origin $repo_git
     fi
