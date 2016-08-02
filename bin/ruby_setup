@@ -92,30 +92,18 @@ case "$action" in
     cd /progs/ruby-build
     git pull
 
-    # === https://github.com/wayneeseguin/rvm/blob/master/scripts/functions/requirements/ubuntu
-    # === https://github.com/sstephenson/ruby-build/wiki
-    # echo "=== Updating system using apt-get:"
-    # sudo apt-get update
-    # sudo apt-get upgrade
-    # sudo apt-get install git      \
-    #   curl gawk zlib1g-dev        \
-    #   build-essential libssl-dev  \
-    #   libreadline-dev libyaml-dev \
-    #   libsqlite3-dev sqlite3      \
-    #   libxml2-dev libxslt-dev     \
-    #   bash curl patch bzip2 ca-certificates gawk                        \
-    #   g++ gcc make libc6-dev patch openssl ca-certificates libreadline6 \
-    #   libreadline6-dev curl zlib1g zlib1g-dev libssl-dev libyaml-dev    \
-    #   libsqlite3-dev sqlite3 autoconf                                   \
-    #   libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev \
-    #   make libc6-dev patch openssl ca-certificates libreadline6         \
-    #   libreadline6-dev curl zlib1g zlib1g-dev libssl-dev libyaml-dev    \
-    #   libsqlite3-dev sqlite3 autoconf                                   \
-    #   libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev \
-    #   autoconf bison build-essential                                    \
-    #   libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev           \
-    #   libedit-dev                                                       \
-    #   libcurl4-openssl-dev
+
+    case "$(mksh_setup os-name)" in
+      "Arch")
+        sudo pacman -S base-devel libffi libyaml openssl zlib
+        ;;
+      "Ubuntu")
+        source "$THIS_DIR/ubuntu/install.deps.sh"
+        ;;
+      *)
+        mksh_setup RED "=== Unknown os: {{$(lsb_release -a)}}"
+        exit 1
+    esac
 
     if [[ -z "$@" ]]; then
       ruby_setup list
@@ -136,7 +124,7 @@ case "$action" in
     fi
 
     # ================ The Main Show ======================
-    echo "=== THIS IS GOING TO TAKE ABOUT 5-10 mins...."
+    mksh_setup BOLD "=== THIS IS GOING TO TAKE ABOUT {{5-10 mins}}...."
     CONFIGURE_OPTS="--enable-shared --disable-install-doc" \
       /progs/ruby-build/bin/ruby-build $ver /progs/ruby/$ver
     # =====================================================
