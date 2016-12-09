@@ -101,7 +101,7 @@ case "$action" in
         source "$THIS_DIR/ubuntu/install.deps.sh"
         ;;
       *)
-        mksh_setup RED "=== Unknown os: {{$(lsb_release -a)}}"
+        sh_color RED "=== Unknown os: {{$(lsb_release -a)}}"
         exit 1
     esac
 
@@ -124,7 +124,7 @@ case "$action" in
     fi
 
     # ================ The Main Show ======================
-    mksh_setup BOLD "=== THIS IS GOING TO TAKE ABOUT {{5-10 mins}}...."
+    sh_color BOLD "=== THIS IS GOING TO TAKE ABOUT {{5-10 mins}}...."
     CONFIGURE_OPTS="--enable-shared --disable-install-doc" \
       /progs/ruby-build/bin/ruby-build $ver /progs/ruby/$ver
     # =====================================================
