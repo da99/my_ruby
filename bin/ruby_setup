@@ -78,6 +78,18 @@ case "$action" in
     ;;
 
   "install")
+    if lsb_release -a | grep Void &>/dev/null ; then
+      if [[ ! -z "$@" ]]; then
+        echo "!!! You are using a Void Linux distro." >&2
+        echo "!!! These args are useless: $@" >&2
+        exit 1
+      fi
+
+      echo "=== Installing ruby through XBPS:"
+      sudo xbps-install -S ruby ruby-devel
+      return 0
+    fi
+
     if [[ -z "$@" ]]; then
       my_gems=/progs/ruby/my_gems
       mkdir -p "$my_gems"
@@ -163,7 +175,7 @@ case "$action" in
 
 
   "gem_install")
-    set -x
+    set "-x"
     trash-put *.gem
     name="$(basename $(pwd))"
     name="$(basename $(pwd))"
