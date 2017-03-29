@@ -2,11 +2,10 @@
 # === {{CMD}}  ...
 gem () {
   unset -f gem
-  if [[ ! -z "$@" && "$1" == install ]]; then
-    shift
-    gem install --no-rdoc --no-ri "$@"
-    return 0
+  if [[ -d configs ]]; then
+    local +x GEMRC="$THIS_DIR"/configs/gemrc
+  else
+    local +x GEMRC="$THIS_DIR"/config/gemrc
   fi
-
-  gem "$@"
+  gem "$@" --config "$GEMRC"
 } # === end function

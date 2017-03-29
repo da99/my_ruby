@@ -6,7 +6,7 @@ ACTION="$1"
 shift
 
 set -u -e -o pipefail
-DIR="$( basename "$(pwd)" )"
+THIS_DIR="$(dirname  "$(dirname "$0")" )"
 TEMPLATES="/apps/ruby_setup/templates/gem"
 
 # PATH="/progs/ruby/current/bin:$PATH"
@@ -28,13 +28,32 @@ case "$ACTION" in
     ;;
 
   *)
-    file="$( echo node_modules/*/bin/$ACTION )"
-    if [[ -f "$file"  ]]; then
-      $file "$@"
+
+    if [[ -e "$THIS_DIR/progs/bin/$ACTION" ]]; then
+      "$THIS_DIR/progs/bin/$ACTION" "$@"
+      return $?
+    fi
+
+    FUNC_FILE="$THIS_DIR/bin/public/${ACTION}/_.sh"
+
+    if [[ -s  "$FUNC_FILE"  ]]; then
+
+      export THIS_FILE="$FUNC_FILE"
+      export THIS_FUNC="$ACTION"
+      export THIS_FUNC_DIR="$THIS_DIR/bin/public/${ACTION}"
+
+      source "$THIS_FILE"
+      "$THIS_FUNC" "$@"
+      exit $?
+    fi
+
+    NODE_FILE="$( echo node_modules/*/bin/$ACTION )"
+    if [[ -f "$NODE_FILE"  ]]; then
+      $NODE_FILE "$@"
       exit 0
     fi
 
-    echo "Unknown action: $ACTION" 1>&2
+    echo "Unknown action: $ACTION" >&2
     exit 1
     ;;
 esac
