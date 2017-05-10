@@ -54,7 +54,7 @@ gem_init () {
     fi
 
     if [[ -z "$(git remote -v)" ]]; then
-      git_setup update
+      my_git update
       git commit -m "Init."
       git remote add origin $repo_git
     fi

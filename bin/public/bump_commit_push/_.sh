@@ -13,7 +13,7 @@ bump_commit_push () {
     $0 bump $@
 
     VER=$(cat VERSION)
-    git_setup update
+    my_git update
     git commit -m   "Bump: $VER"
     git tag         "v$VER"
     git push
