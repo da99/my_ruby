@@ -11,7 +11,7 @@ gem_init () {
 
     echo ""
     export name="$(basename $(pwd))"
-    export NAME="$(ruby_setup class_name $name)"
+    export NAME="$(my_ruby class_name $name)"
     export today="$(date +"%Y-%m-%d")"
     export year="$(date +"%Y")"
     export user="$(git config --global user.name)"
@@ -32,21 +32,21 @@ gem_init () {
     mkdir -p lib
     mkdir -p bin
 
-    ruby_setup template $TEMPLATES/Gemfile     Gemfile
-    ruby_setup template $TEMPLATES/LICENSE     LICENSE
-    ruby_setup template $TEMPLATES/README.md   README.md
-    ruby_setup template $TEMPLATES/the.gemspec ${name}.gemspec
-    ruby_setup template $TEMPLATES/VERSION     VERSION
-    ruby_setup template $TEMPLATES/.gitignore  .gitignore
-    ruby_setup template $TEMPLATES/lib.rb      lib/${name}.rb
-    ruby_setup template $TEMPLATES/helpers.rb  specs/lib/helpers.rb
+    my_ruby template $TEMPLATES/Gemfile     Gemfile
+    my_ruby template $TEMPLATES/LICENSE     LICENSE
+    my_ruby template $TEMPLATES/README.md   README.md
+    my_ruby template $TEMPLATES/the.gemspec ${name}.gemspec
+    my_ruby template $TEMPLATES/VERSION     VERSION
+    my_ruby template $TEMPLATES/.gitignore  .gitignore
+    my_ruby template $TEMPLATES/lib.rb      lib/${name}.rb
+    my_ruby template $TEMPLATES/helpers.rb  specs/lib/helpers.rb
 
-    ruby_setup template $TEMPLATES/name        bin/${name}
+    my_ruby template $TEMPLATES/name        bin/${name}
     chmod +x bin/${name}
 
     # === Create a default test file if no other test files exist.
     if [[ "$(echo -n specs/*.rb)" == "" ]]; then
-      ruby_setup template $TEMPLATES/first_test.rb specs/${name}.rb
+      my_ruby template $TEMPLATES/first_test.rb specs/${name}.rb
     fi
 
     if [[ ! -d .git ]]; then

@@ -7,7 +7,7 @@ shift
 
 set -u -e -o pipefail
 THIS_DIR="$(dirname  "$(dirname "$0")" )"
-TEMPLATES="/apps/ruby_setup/templates/gem"
+TEMPLATES="/apps/my_ruby/templates/gem"
 
 # PATH="/progs/ruby/current/bin:$PATH"
 

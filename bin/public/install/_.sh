@@ -42,7 +42,7 @@ install () {
     esac
 
     if [[ -z "$@" ]]; then
-      ruby_setup list
+      my_ruby list
       echo "=== Choose one from the top."
       exit 0
     fi
@@ -76,7 +76,7 @@ install () {
     gem install bundler --no-document
     gem install bump    --no-document
     gem install pry     --no-document
-    ruby_setup  gemrc_config
+    my_ruby  gemrc_config
 
     echo "=== Done installing."
     ruby -v

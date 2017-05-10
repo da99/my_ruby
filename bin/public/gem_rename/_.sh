@@ -1,10 +1,10 @@
 
 # === {{CMD}}  OLD   NEW
 gem_rename () {
-    old="$(ruby_setup instance_name $1)"
-    new="$(ruby_setup instance_name $2)"
-    old_class="$(ruby_setup class_name $1)"
-    new_class="$(ruby_setup class_name $2)"
+    old="$(my_ruby instance_name $1)"
+    new="$(my_ruby instance_name $2)"
+    old_class="$(my_ruby class_name $1)"
+    new_class="$(my_ruby class_name $2)"
 
     if [[ -d "/apps/$old" ]]
     then

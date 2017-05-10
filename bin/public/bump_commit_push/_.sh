@@ -1,7 +1,7 @@
 
 # === {{CMD}}  major|minor|patch
 bump_commit_push () {
-    ruby_setup ruby_clean
+    my_ruby ruby_clean
     git_is_clean
     bundle update
     if [[ -f "bin/test" ]]; then
