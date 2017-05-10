@@ -17,7 +17,7 @@ install () {
     if [[ -z "$@" ]]; then
       my_gems=/progs/ruby/my_gems
       mkdir -p "$my_gems"
-      bash_setup make_link "$my_gems" $HOME/.gem
+      my_bash link "$my_gems" $HOME/.gem
       if ! gem list -i curses; then
         gem install --user-install curses # Needed for fzf
       fi

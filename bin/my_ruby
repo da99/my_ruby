@@ -6,8 +6,13 @@ ACTION="$1"
 shift
 
 set -u -e -o pipefail
-THIS_DIR="$(dirname  "$(dirname "$0")" )"
-TEMPLATES="/apps/my_ruby/templates/gem"
+THIS_DIR="$(dirname  "$(dirname "$(realpath "$0")")" )"
+PATH="$PATH:$THIS_DIR/../my_bash/bin"
+PATH="$PATH:$THIS_DIR/../my_fs/bin"
+PATH="$PATH:$THIS_DIR/../mksh_setup/bin"
+PATH="$PATH:$THIS_DIR/../sh_string/bin"
+
+TEMPLATES="$THIS_DIR/templates/gem"
 
 # PATH="/progs/ruby/current/bin:$PATH"
 
